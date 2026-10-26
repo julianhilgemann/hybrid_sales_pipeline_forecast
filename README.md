@@ -153,17 +153,17 @@ This enables both:
 
 ## Repository Structure
 
-- [`pipeline_forecast.py`](/Users/admin/Desktop/pipeline-forecast/pipeline_forecast.py)
+- [`pipeline_forecast.py`](pipeline_forecast.py)
   Thin CLI entrypoint for end-to-end synthetic generation, DuckDB write, forecasting, evaluation, and exports.
-- [`model_overview_figure.py`](/Users/admin/Desktop/pipeline-forecast/model_overview_figure.py)
+- [`model_overview_figure.py`](model_overview_figure.py)
   Thin CLI entrypoint for the multi-panel architecture figure.
-- [`pipeline_lib/`](/Users/admin/Desktop/pipeline-forecast/pipeline_lib)
+- [`pipeline_lib/`](pipeline_lib)
   Modular forecast library (calendar, simulation, warehouse SQL, modeling, forecasting, plotting, and overview figure modules).
-- [`tests/test_pipeline_modularization.py`](/Users/admin/Desktop/pipeline-forecast/tests/test_pipeline_modularization.py)
+- [`tests/test_pipeline_modularization.py`](tests/test_pipeline_modularization.py)
   Regression and integration tests for modularized transforms and output generation.
-- [`scripts/`](/Users/admin/Desktop/pipeline-forecast/scripts)
+- [`scripts/`](scripts)
   Cross-platform helpers for creating and using a repo-local virtual environment.
-- [`outputs/`](/Users/admin/Desktop/pipeline-forecast/outputs)
+- `outputs/` (not committed)
   Generated DuckDB, CSVs, and figures.
 
 ## Quick Start (Self-Contained venv)
