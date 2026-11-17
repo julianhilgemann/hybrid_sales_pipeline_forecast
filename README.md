@@ -151,6 +151,12 @@ This enables both:
 - future-arrivals convolution heatmap + aligned side distributions
 - stacked daily expected conversions with smoothed total
 
+## Animated Explainer
+
+[![The whole machine: final frame of the explainer film](docs/explainer-poster.png)](animation/README.md)
+
+A six-minute, 3Blue1Brown-style film walks through the model chapter by chapter, from the stream of opportunities to the forecast, animated from the model's real output. The scenes, the build commands and an account of how it was made are in [`animation/`](animation/README.md); rendered video is built locally and not committed.
+
 ## Repository Structure
 
 - [`pipeline_forecast.py`](pipeline_forecast.py)
@@ -163,6 +169,10 @@ This enables both:
   Regression and integration tests for modularized transforms and output generation.
 - [`scripts/`](scripts)
   Cross-platform helpers for creating and using a repo-local virtual environment.
+- [`animation/`](animation)
+  Manim source of the animated explainer film (own virtual environment).
+- [`.claude/skills/manim-explainer/`](.claude/skills/manim-explainer)
+  Reusable Claude Code skill and toolkit for turning an idea in a repository into such a film.
 - `outputs/` (not committed)
   Generated DuckDB, CSVs, and figures.
 

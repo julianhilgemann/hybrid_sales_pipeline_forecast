@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 outputs/
+.DS_Store
+.Rhistory
+.claude/settings.local.json
