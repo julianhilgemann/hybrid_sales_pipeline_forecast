@@ -11,8 +11,11 @@ One sheet and two or three stills decide most clips. Zoom into a suspect transit
 
 ## Checklist
 
-Approve when all of these hold in the frames:
+Approve when all of these hold in the frames. Read the sheet twice: first as the newcomer, who has never seen the idea, then as a critic.
 
+- The chapter opens on its guiding question and ends on a takeaway that answers it.
+- Every symbol arrives with words the first time it appears; every caption holds at least 3 s; nothing reads as rushed.
+- The motif tells the truth on every frame: each record shows its current state.
 - The beats of the brief are present, in order, and each reads without the brief in hand.
 - Colours match the semantics; every formula matches the notation; orientation matches the source figure.
 - Text is crisp, at or above size 22, clear of the header, the frame edge and the data.
@@ -24,14 +27,17 @@ Approve when all of these hold in the frames:
 
 ## Defects that recur
 
-These were the revision requests on a seven-chapter film. Check for them first.
+These were the revision requests on two films. Check for them first.
 
 | Defect | Where | Request |
 |---|---|---|
+| the whole first edition: correct, but no definitions, symbols without words, 35–55 s chapters | every chapter | the newcomer rules of the guide: question card, definitions first, tangents on the motif population, 3 s captions, 55–95 s chapters |
+| records that changed state keep their old colour (lost deals stayed "open" lavender), so a count on screen reads wrong | tangent chapter on the motif population | recolour each record on the beat its state changes; no extra time needed |
 | 3D realisations drawn as translucent step curtains: a wireframe skyline | payoff chapter | thin straight-segment paths, depth-graded, 40–50 of them, spread further in depth |
 | forecast bars fill a third of an axis sized for later data | payoff chapter | tight range first, animated rescale when the larger data arrives |
 | large translucent blocks sweep across another panel during a "pour" | finale | copies collapse in place into chips the size of the result, then travel, staggered |
-| the collapse onto the wall takes about a second | 3D construction | 2.5–3 s, staggered so the stack visibly builds |
+| the collapse onto the wall takes about a second | 3D construction | 4–5 s, staggered so the stack visibly builds |
+| a bright rim at the foot of stacked towers | 3D construction | `merge` the stacks into solid bars |
 | dashed stripes while stacked bands turn into bars | 3D construction | merge the bands into one area, bring the opaque bars in on top, then remove the area |
 | two captions superimposed during a cross-fade | any | every swap sequential: old out, new in |
 

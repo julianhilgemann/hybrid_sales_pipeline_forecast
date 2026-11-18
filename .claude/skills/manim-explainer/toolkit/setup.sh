@@ -21,6 +21,11 @@ else
   say "[MISSING]" "latex/dvisvgm. Install a full TeX distribution (macOS: MacTeX; a minimal BasicTeX needs extra tlmgr packages, see Manim's installation docs) and re-run."
   status=1
 fi
+if command -v kpsewhich >/dev/null 2>&1 && [ -n "$(kpsewhich sourcesanspro.sty 2>/dev/null)" ]; then
+  say "[ok]" "text font Source Sans Pro"
+elif command -v latex >/dev/null 2>&1; then
+  say "[note]" "sourcesanspro.sty not found: words fall back to Computer Modern ('tlmgr install sourcesanspro' to fix; optional)"
+fi
 
 # --- cairo (pycairo compiles against it; it has no macOS wheels) -------------
 if pkg-config --exists cairo 2>/dev/null; then

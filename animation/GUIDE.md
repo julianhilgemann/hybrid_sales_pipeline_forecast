@@ -133,11 +133,11 @@ Day indexing: the film numbers forecast days $d = 1..15$ (the README chart label
 
 ## Tools in `common.py`
 
-Teaching devices: `open_chapter(scene, n, title, accent, question=, part=)`, `takeaway(scene, text, accent, old_caption)`, `caption` / `swap_caption`, `definition_card(term, lines, color, icon=)`, `callout(text, point, direction, color)`, `legend_item(text, color, mark)`, `cohort_grid()`, `PART[n]`.
+Teaching devices: `open_chapter(scene, n, title, accent, question=, part=)`, `takeaway(scene, text, accent, old_caption, colors=, also=)`, `caption` / `swap_caption(scene, old, text, *also)` / `caption_swap(scene, old, text, run_time)` (a caption change that rides inside another play), `text_line(parts, colors=)` (colour one word of a sentence), `definition_card(term, lines, color, icon=, aside=)`, `callout(text or lines, point, direction, color)`, `legend_item(text, color, mark)`, `cohort_grid()`, `TexCounter` (a changing number in the text font), `hatched_rect` (the pooled 45+ look), `PART[n]`.
 
-2D: `make_axes`, `tick_labels`, `bars`, `hbars`, `curve`, `area_under`, `heat_grid`, `ramp_color`, `shade`.
+2D: `Chart` (explicit data-to-scene maps for bars centred on integer ages, rescaling and shared baselines), `make_axes`, `tick_labels`, `bars`, `hbars`, `curve`, `area_under`, `heat_grid`, `ramp_color`, `shade`.
 
-3D: `flat_shading(scene)`, `CAM_3D`, `CAM_TOP`, `CAM_FRONT`, `delayed`, `pin_label`, `fix_in_frame`, `floor_grid` / `FloorLine`, `ribbon_3d`, `floor_tiles_3d`, and **`HeatTowers`**, the 3D heat-map:
+3D: `setup_3d(scene)` (host mobject, flat shading, FloorLine camera: first line of a 3D `construct()`), `CAM_3D`, `CAM_TOP`, `CAM_FRONT`, `view` / `cam_to` / `drift`, `delayed`, `fix_in_frame`, `pin_label` / `move_pins` / `place_pin`, `slide`, `hide_during`, `pinned`, `floor_grid` / `FloorLine` / `FloorPoly`, `ribbon_3d`, `floor_tiles_3d`, and **`HeatTowers`** (`lift(..., ks=, fade_in=)` for a subset, `tint` to light or dim towers, `gamma=` for the colour mapping), the 3D heat-map. Chapters 07 and 09 predate most of these and carry equivalent local copies.
 
 ```python
 flat_shading(self)                                  # first line of a 3D construct()
