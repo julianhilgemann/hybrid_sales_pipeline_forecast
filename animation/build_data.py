@@ -105,6 +105,53 @@ def simulate_system(N, k, loss, S, arrivals, rng, detail: bool = False):
     return wins_stock, wins_arr, particles
 
 
+def cohort_of_100(k, loss, rng):
+    """A cohort of 100 brand-new opportunities that follows the real hazards on
+    average: cumulative wins/losses by age are rounded expected counts, so the
+    piles end at round(100*P(win)), round(100*P(loss)), and the rest stays open.
+    Dots are assigned to events in a shuffled order so the grid looks random."""
+    won_cum = np.round(100 * np.cumsum(k)).astype(int)
+    lost_cum = np.round(100 * np.cumsum(loss)).astype(int)
+    won_at = np.diff(np.concatenate([[0], won_cum]))
+    lost_at = np.diff(np.concatenate([[0], lost_cum]))
+    open_at = 100 - np.concatenate([[0], np.cumsum(won_at + lost_at)[:-1]])  # open at start of age a
+    order = rng.permutation(100)
+    dots = [{"slot": int(s), "outcome": "open", "age": None} for s in range(100)]
+    pos = 0
+    for a in range(len(k)):
+        for _ in range(int(won_at[a])):
+            dots[int(order[pos])].update(outcome="won", age=a)
+            pos += 1
+        for _ in range(int(lost_at[a])):
+            dots[int(order[pos])].update(outcome="lost", age=a)
+            pos += 1
+    return won_at, lost_at, open_at, dots
+
+
+def training_sample(lifelines, n_won=12, n_lost=14, n_open=10, seed=3):
+    """Real lifelines created inside the training window, as known on the as-of
+    date: an event at age ttc if it closed by then, otherwise open (censored) at
+    its current age. A stratified sample, sorted by creation day."""
+    rng = np.random.default_rng(seed)
+    rows = []
+    for row in lifelines:
+        c = row["created_rel"]
+        if not (-TRAINING_WINDOW + 1 <= c <= 0):
+            continue
+        if row["closed_rel"] is not None and row["closed_rel"] <= 0 and row["outcome"] in ("won", "lost"):
+            rows.append({"created_rel": c, "end_age": int(row["ttc"]), "status": row["outcome"]})
+        else:
+            rows.append({"created_rel": c, "end_age": int(-c), "status": "open"})
+    pick = []
+    for status, n in (("won", n_won), ("lost", n_lost), ("open", n_open)):
+        pool = [r for r in rows if r["status"] == status and r["end_age"] <= MAX_AGE]
+        idx = rng.choice(len(pool), size=n, replace=False)
+        pick += [pool[i] for i in idx]
+    pick.sort(key=lambda r: (r["created_rel"], r["end_age"]))
+    counts = {s: sum(1 for r in rows if r["status"] == s) for s in ("won", "lost", "open")}
+    return pick, counts
+
+
 def main() -> int:
     with tempfile.TemporaryDirectory(prefix="pipeline_anim_") as tmp:
         cfg = Config(
@@ -207,6 +254,22 @@ def main() -> int:
         for row in lifelines.itertuples(index=False)
     ]
 
+
+    # ---- didactic extras: a cohort of 100, a conditional example, training lifelines
+    won_at, lost_at, open_at, dots = cohort_of_100(k, loss, np.random.default_rng(11))
+    assert won_at.sum() == round(100 * k.sum()) and lost_at.sum() == round(100 * loss.sum())
+    assert np.all(np.abs(open_at - 100 * S) <= 1.5), "cohort drifts from S(a)"
+    A0 = 8
+    cond = np.array([k[A0 + d] / S[A0] for d in range(1, HORIZON + 1)])
+    assert np.allclose(N[A0] * cond, stock_surface[A0]), "conditional row != stock surface row"
+    cond_matrix = np.zeros((MAX_AGE + 1, HORIZON))
+    for a in range(MAX_AGE + 1):
+        for d in range(1, HORIZON + 1):
+            if a + d <= MAX_AGE and S[a] > 1e-12:
+                cond_matrix[a, d - 1] = k[a + d] / S[a]
+    assert np.allclose(N[:, None] * cond_matrix, stock_surface)
+    sample, window_counts = training_sample(life_rows)
+
     bundle = {
         "meta": {
             "as_of_date": AS_OF,
@@ -275,6 +338,32 @@ def main() -> int:
             "q95_total": r(np.quantile(sims_total, 0.95, axis=0), 2),
             "particles": particles,
         },
+        "cohort": {
+            "size": 100,
+            "won_at_age": won_at.astype(int).tolist(),
+            "lost_at_age": lost_at.astype(int).tolist(),
+            "open_at_age": open_at.astype(int).tolist(),
+            "won_total": int(won_at.sum()),
+            "lost_total": int(lost_at.sum()),
+            "open_end": int(100 - won_at.sum() - lost_at.sum()),
+            "dots": dots,
+        },
+        "conditional": {
+            "a0": A0,
+            "N_a0": float(N[A0]),
+            "S_a0": round(float(S[A0]), 6),
+            "cond_prob": r(cond),
+            "cond_total": round(float(cond.sum()), 6),
+            "row": r(stock_surface[A0]),
+            "row_total": round(float(stock_surface[A0].sum()), 6),
+            "matrix": r(cond_matrix),
+        },
+        "training": {
+            "window_start_rel": -TRAINING_WINDOW + 1,
+            "window_end_rel": 0,
+            "sample": sample,
+            "window_counts": window_counts,
+        },
         "lifelines": life_rows,
     }
     if bundle["arrivals"]["forecast_dow"] is None:
@@ -290,6 +379,9 @@ def main() -> int:
     print(f"  expected wins over horizon: stock={w_stock.sum():.2f} arrivals={w_arr.sum():.2f}")
     print(f"  MC mean total / model total: {sims_total.mean(axis=0).sum():.2f} / {w_total.sum():.2f}")
     print(f"  lifelines={len(life_rows)}  particles={len(particles)}")
+    print(f"  cohort: won={won_at.sum()} lost={lost_at.sum()} open={100 - won_at.sum() - lost_at.sum()}; open at age {A0}: {open_at[A0]}")
+    print(f"  conditional a0={A0}: N={N[A0]:.0f} S={S[A0]:.3f} sum p={cond.sum():.3f} expected wins={stock_surface[A0].sum():.2f}")
+    print(f"  training window counts {window_counts}")
     return 0
 
 

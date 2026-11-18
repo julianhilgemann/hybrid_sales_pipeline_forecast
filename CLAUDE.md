@@ -12,4 +12,4 @@ Business-day sales-pipeline forecasting prototype: a win kernel convolved with t
 
 ## Animated explainer
 
-The film of the model lives in [animation/](animation/), and [animation/README.md](animation/README.md) records how it was built. To animate another idea, use the `manim-explainer` skill.
+The film of the model lives in [animation/](animation/), and [animation/README.md](animation/README.md) records how it was built. Editing a chapter: [animation/GUIDE.md](animation/GUIDE.md) holds its binding notation, colours, teaching rules and data schema; shared helpers (including the 3D `HeatTowers`) are in `animation/common.py`. To animate another idea, use the `manim-explainer` skill.

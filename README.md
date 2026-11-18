@@ -155,7 +155,7 @@ This enables both:
 
 [![The whole machine: final frame of the explainer film](docs/explainer-poster.png)](animation/README.md)
 
-A six-minute, 3Blue1Brown-style film walks through the model chapter by chapter, from the stream of opportunities to the forecast, animated from the model's real output. The scenes, the build commands and an account of how it was made are in [`animation/`](animation/README.md); rendered video is built locally and not committed.
+A fourteen-minute, 3Blue1Brown-style film walks through the model in eleven chapters for a viewer who has never seen it: what an opportunity, a win and a loss are, hazards and survival, how the rates are estimated, why a conditional probability decides how much of today's pipeline converts, 3D heat-maps that stack into the daily forecast, and the whole machine. It is animated from the model's real output. The scenes, the build commands and an account of how it was made are in [`animation/`](animation/README.md); rendered video is built locally and not committed.
 
 ## Repository Structure
 
